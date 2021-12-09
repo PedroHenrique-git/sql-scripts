@@ -24,3 +24,14 @@ insert into profiles (bio, description, user_id)
 select concat('bio de ', first_name), concat('description de ', first_name), id from users;
 
 delete from profiles;
+
+delete from users where id = 70;
+
+update users set 
+first_name = "Luiz", 
+last_name  = "Miranda" 
+where id between 40 and 45;
+
+select u.id as "Users id", p.id as "Profiles id" from users u, profiles p;
+
+select u.id as "users ids", p.id as "profiles ids" from users u, profiles p where u.id = p.user_id;

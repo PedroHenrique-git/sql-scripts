@@ -63,24 +63,31 @@ BEGIN
     idCliente = clientId;
 END
 
-CREATE PROCEDURE `calculareOrderPrice` (in orderId int)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spCalculateOrderPrice`(in orderId int)
 BEGIN
 	declare resultado decimal(18,2);
 	declare price decimal(18,2);
 	declare fim boolean;
+    
     declare c_itemvenda cursor for
 		select ipv.Preco
 		from itempedidovenda ipv
 		inner join pedidovenda pv on(pv.idPedidoVenda = ipv.idPedidoVenda);
-	declare continue handler for not found set fim = true;
+	
+    declare continue handler for not found set fim = true;
+    
+    set resultado = 0;
+    
     open c_itemvenda;
 		READ_LOOP:
 			LOOP
 				FETCH c_itemvenda into price;
-				set resultado = resultado + price;
                 if fim then
 					leave read_loop;
                 end if;
+                set resultado = price + resultado;
             end LOOP;
     close c_itemvenda;
+    
+    select resultado;
 END
